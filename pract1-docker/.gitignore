@@ -8,10 +8,8 @@ npm-debug.log
 logs
 *.log
 
-# OS and Editor files
+# OS
 .DS_Store
-*.swp
-*.swo
 
 # Environment files (optional, if you add any environment-specific files)
 .env
