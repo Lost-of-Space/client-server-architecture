@@ -1,0 +1,17 @@
+# .gitignore
+
+# Node.js dependencies
+node_modules/
+npm-debug.log
+
+# Logs
+logs
+*.log
+
+# OS and Editor files
+.DS_Store
+*.swp
+*.swo
+
+# Environment files (optional, if you add any environment-specific files)
+.env
