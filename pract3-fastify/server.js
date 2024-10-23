@@ -1,17 +1,22 @@
 const { PORT, HOST } = require("./config");
 
+// Import the bootstrapFastify function from app.js
 const { bootstrapFastify } = require("./app");
 
+// Declare a variable to hold the Fastify instance
 let fastify;
 
+/**
+ * Function to start the Fastify server
+ */
 const startServer = async () => {
     try {
         // Initialize Fastify by calling bootstrapFastify
-        const fastify = bootstrapFastify();
+        fastify = bootstrapFastify();
 
         // Define the port and host
-        const port = PORT;  // Use the port from the config
-        const host = HOST;  // Use the host from the config
+        const port = PORT; // Use the port from the config
+        const host = HOST; // Use the host from the config
 
         // Start listening on the specified port and host
         await fastify.listen({ port, host });
@@ -28,6 +33,10 @@ const startServer = async () => {
     }
 };
 
+/**
+ * Function to gracefully shut down the server
+ * @param {string} signal - The signal received (e.g., SIGINT, SIGTERM)
+ */
 const shutdown = async (signal) => {
     console.log(`Received ${signal}. Shutting down gracefully...`);
     if (fastify) {
@@ -50,7 +59,6 @@ const shutdown = async (signal) => {
 process.on("SIGINT", () => shutdown("SIGINT"));
 process.on("SIGTERM", () => shutdown("SIGTERM"));
 
-
 // Handle unhandled promise rejections
 process.on("unhandledRejection", (reason, promise) => {
     console.error("Unhandled Rejection at:", promise, "reason:", reason);
@@ -67,4 +75,3 @@ process.on("uncaughtException", (err) => {
 
 // Start the server
 startServer();
-

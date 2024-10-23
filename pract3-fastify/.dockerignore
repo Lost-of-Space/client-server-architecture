@@ -1,26 +1,24 @@
-# .dockerignore
-
-# Node.js dependencies
-node_modules
-npm-debug.log
-
-
-.env
-
-# Logs
-logs
-*.log
-
-# Git
-.git
-.gitignore
-
-# Docker
-Dockerfile
-.dockerignore
-docker-compose.yml
-
-# OS and Editor files
-.DS_Store
-*.tmp
-*.temp
+**/.classpath
+**/.dockerignore
+**/.env
+**/.git
+**/.gitignore
+**/.project
+**/.settings
+**/.toolstarget
+**/.vs
+**/.vscode
+**/*.*proj.user
+**/*.dbmdl
+**/*.jfm
+**/charts
+**/docker-compose*
+**/compose*
+**/Dockerfile*
+**/node_modules
+**/npm-debug.log
+**/obj
+**/secrets.dev.yaml
+**/values.dev.yaml
+LICENSE
+README.md

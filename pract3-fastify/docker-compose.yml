@@ -1,29 +1,30 @@
-version: '3.8'
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    volumes:
-      - .:/srv/node/app
-    ports:
-      - "9229:9229"
     networks:
       - app-network
-  
+    ports:
+    #  - "3000:3000"    # Application port
+      - "9229:9229"    # Debugger port
+    volumes:
+      - .:/srv/node/app  # Mount local directory to container
+    environment:
+      - NODE_ENV=development
+
   nginx:
     image: nginx:alpine
     ports:
       - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/conf.d/default.conf:ro
-      - ./static:/usr/share/ngnix/static:ro
-      - ./html:/usr/share/ngnix/html:ro
-    depends_on:
-      - app
     networks:
       - app-network
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/usr/share/nginx/static:ro
+      - ./html:/usr/share/nginx/html:ro
+    depends_on:
+      - app
 
 networks:
   app-network:
