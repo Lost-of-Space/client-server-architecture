@@ -1,16 +1,26 @@
 # First stage: Development environment
 FROM node:22 AS development
 
+# Set SHELL environment variable to a supported shell
+ENV SHELL=/bin/bash
+# Install pnpm globally using corepack
+RUN corepack enable && corepack prepare pnpm@latest --activate
+# Set PNPM_HOME to define the global bin directory and add it to PATH
+ENV PNPM_HOME=/node/.local/share/pnpm
+ENV PATH=$PNPM_HOME:$PATH
+# Run pnpm setup to configure global bin directory
+RUN pnpm setup
+
 # Create and set the working directory inside the container
 WORKDIR /srv/node/app
 
-# Install pnpm globally for better dependency management
-RUN npm install -g pnpm
+# Copy package.json and install dependencies
+COPY package*.json ./
+# RUN npm install
 
-# Copy package.json and pnpm-lock.yaml (якщо є)
-COPY package*.json pnpm-lock.yaml ./
-
-# Install dependencies with pnpm
+# Fetch dependencies for caching, without creating a node_modules folder
+RUN pnpm fetch
+# Install dependencies
 RUN pnpm install
 
 # Copy the rest of the application
@@ -19,11 +29,10 @@ COPY --chown=node:node . .
 # Switch to the node user
 USER node
 
-# Run Prisma commands if REBUILD_PRISMA_CLIENT is set to true
 RUN if [ "$REBUILD_PRISMA_CLIENT" = "true" ]; then \
-  pnpm db:sync && pnpm prisma generate; \
-  fi
-
+    #npm db:sync && npx prisma generate; \
+    npm run db:sync; \
+    fi
 # Expose the port the app runs on
 EXPOSE 3000
 
@@ -34,4 +43,5 @@ EXPOSE 9229
 ENV NODE_ENV=development
 
 # Use nodemon for automatic server reloads in development
-CMD ["pnpm", "nodemon", "--inspect=0.0.0.0:9229", "server.js"]
+# CMD ["nodemon", "--inspect=0.0.0.0:9229", "server.js"]
+CMD ["pnpm", "exec", "nodemon", "--inspect=0.0.0.0:9229", "server.js"]
